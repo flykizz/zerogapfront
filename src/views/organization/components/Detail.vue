@@ -2,87 +2,51 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <div class="createPost-main-container">
-        <el-row>
-          <el-col :span="24">
-            <el-form-item style="margin-bottom: 40px;" prop="title">
-              <MDinput v-model="postForm.title" :maxlength="100" name="name" required>Title</MDinput>
-            </el-form-item>
-            <div class="postInfo-container">
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item label-width="60px" label="Author:" class="postInfo-container-item">
-                    <el-select
-                      v-model="postForm.author"
-                      :remote-method="getRemoteUserList"
-                      filterable
-                      default-first-option
-                      remote
-                      placeholder="Search user"
-                    >
-                      <el-option
-                        v-for="(item,index) in userListOptions"
-                        :key="item+index"
-                        :label="item"
-                        :value="item"
-                      />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="10">
-                  <el-form-item
-                    label-width="120px"
-                    label="Publush Time:"
-                    class="postInfo-container-item"
-                  >
-                    <el-date-picker
-                      v-model="postForm.display_time"
-                      type="datetime"
-                      format="yyyy-MM-dd HH:mm:ss"
-                      placeholder="Select date and time"
-                    />
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="6">
-                  <el-form-item
-                    label-width="90px"
-                    label="Importance:"
-                    class="postInfo-container-item"
-                  >
-                    <el-rate
-                      v-model="postForm.importance"
-                      :max="3"
-                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                      :low-threshold="1"
-                      :high-threshold="3"
-                      style="margin-top:8px;"
-                    />
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="70px" label="Summary:">
+        <el-form-item style="margin-bottom: 40px;" label-width="110px" label="团队名:">
           <el-input
-            v-model="postForm.content_short"
+            v-model="postForm.name"
+            :rows="1"
+            type="input"
+            autosize
+            placeholder="请输入团队名称"
+          />
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label-width="110px" label="团队logo:">
+          <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            list-type="picture"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :limit="1"
+            :file-list="postForm.logoList"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label-width="110px" label="描述:">
+          <el-input
+            v-model="postForm.descript"
             :rows="1"
             type="textarea"
             class="article-textarea"
             autosize
-            placeholder="Please enter the content"
+            placeholder="请输入团队描述"
           />
-          <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
         </el-form-item>
-
-        <el-form-item prop="content" style="margin-bottom: 30px;">
-          <Tinymce ref="editor" v-model="postForm.content" :height="400" />
+        <el-form-item style="margin-bottom: 40px;" label-width="110px" label="团队状态:">
+          <el-select v-model="postForm.status" filterable placeholder="请选择">
+            <el-option
+              v-for="item in postForm.statusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
-
-        <el-form-item prop="image_uri" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.image_uri" />
+        <el-form-item style="padding-left: 110px;">
+          <el-button type="primary" @click="submitForm">立即创建</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -90,24 +54,17 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
-import Upload from '@/components/Upload/SingleImage3'
-import MDinput from '@/components/MDinput'
-import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
 
+import { fetchOrganization, addOrganization } from '@/api/organization'
+
+import mixins from '@/mixins/index'
 import formData from '@/formdatas/organization'
 
 const defaultForm = formData
 
 export default {
   name: 'Detail',
-  components: {
-    Tinymce,
-    MDinput,
-    Upload
-  },
+  mixins: [mixins],
   props: {
     isEdit: {
       type: Boolean,
@@ -115,49 +72,14 @@ export default {
     }
   },
   data() {
-    const validateRequire = (rule, value, callback) => {
-      if (value === '') {
-        this.$message({
-          message: rule.field + '为必传项',
-          type: 'error'
-        })
-        callback(new Error(rule.field + '为必传项'))
-      } else {
-        callback()
-      }
-    }
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
-      } else {
-        callback()
-      }
-    }
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
-      userListOptions: [],
-      rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
-      },
+      rules: defaultForm.rules,
       tempRoute: {}
     }
   },
   computed: {
-    contentShortLength() {
-      return this.postForm.content_short.length
-    },
     lang() {
       return this.$store.getters.language
     }
@@ -169,76 +91,43 @@ export default {
     } else {
       this.postForm = Object.assign({}, defaultForm)
     }
-    // Why need to make a copy of this.$route here?
-    // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
-    // https://github.com/PanJiaChen/vue-element-admin/issues/1221
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id)
+      fetchOrganization(id)
         .then(response => {
           this.postForm = response.data
-          // Just for test
-          this.postForm.title += `   Article Id:${this.postForm.id}`
-          this.postForm.content_short += `   Article Id:${this.postForm.id}`
-          // Set tagsview title
-          this.setTagsViewTitle()
         })
         .catch(err => {
           console.log(err)
         })
     },
-    setTagsViewTitle() {
-      const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, {
-        title: `${title}-${this.postForm.id}`
-      })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-    },
-    submitForm() {
-      this.postForm.display_time = parseInt(this.display_time / 1000)
-      console.log(this.postForm)
-      this.$refs.postForm.validate(valid => {
-        if (valid) {
-          this.loading = true
+    postData() {
+      this.loading = true
+      addOrganization(this.postForm)
+        .then(response => {
           this.$notify({
             title: '成功',
-            message: '发布文章成功',
+            message: '创建组织成功',
             type: 'success',
             duration: 2000
           })
-          this.postForm.status = 'published'
           this.loading = false
+        })
+        .catch(err => {
+          console.log(err)
+          this.loading = false
+        })
+    },
+    submitForm() {
+      this.postForm.display_time = parseInt(this.display_time / 1000)
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          this.postData()
         } else {
-          console.log('error submit!!')
           return false
         }
-      })
-    },
-    draftForm() {
-      if (
-        this.postForm.content.length === 0 ||
-        this.postForm.title.length === 0
-      ) {
-        this.$message({
-          message: '请填写必要的标题和内容',
-          type: 'warning'
-        })
-        return
-      }
-      this.$message({
-        message: '保存成功',
-        type: 'success',
-        showClose: true,
-        duration: 1000
-      })
-      this.postForm.status = 'draft'
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
       })
     }
   }
@@ -247,35 +136,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-.createPost-container {
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
   position: relative;
-  .createPost-main-container {
-    padding: 40px 45px 20px 50px;
-    .postInfo-container {
-      position: relative;
-      @include clearfix;
-      margin-bottom: 10px;
-      .postInfo-container-item {
-        float: left;
-      }
-    }
-  }
-  .word-counter {
-    width: 40px;
-    position: absolute;
-    right: 10px;
-    top: 0px;
-  }
+  overflow: hidden;
 }
-.article-textarea /deep/ {
-  textarea {
-    padding-right: 40px;
-    resize: none;
-    border: none;
-    border-radius: 0px;
-    border-bottom: 1px solid #bfcbd9;
-  }
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>
 
