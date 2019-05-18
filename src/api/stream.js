@@ -1,31 +1,31 @@
 import request from '@/utils/request'
 
-export function getSettings() {
+export function getStreams() {
   return request({
-    url: '/settings',
+    url: '/streams',
     method: 'get'
   })
 }
 
-export function addSetting(data) {
+export function addStream(data) {
   return request({
-    url: '/setting',
+    url: '/stream',
     method: 'post',
     data
   })
 }
 
-export function updateSetting(id, data) {
+export function updateStream(id, data) {
   return request({
-    url: `/setting/${id}`,
+    url: `/stream/${id}`,
     method: 'put',
     data
   })
 }
 
-export function deleteSetting(id) {
+export function deleteStream(id) {
   return request({
-    url: `/setting/${id}`,
+    url: `/stream/${id}`,
     method: 'delete'
   })
 }

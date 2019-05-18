@@ -1,31 +1,31 @@
 import request from '@/utils/request'
 
-export function getSettings() {
+export function getPpages() {
   return request({
-    url: '/settings',
+    url: '/ppages',
     method: 'get'
   })
 }
 
-export function addSetting(data) {
+export function addPpage(data) {
   return request({
-    url: '/setting',
+    url: '/ppage',
     method: 'post',
     data
   })
 }
 
-export function updateSetting(id, data) {
+export function updatePpage(id, data) {
   return request({
-    url: `/setting/${id}`,
+    url: `/ppage/${id}`,
     method: 'put',
     data
   })
 }
 
-export function deleteSetting(id) {
+export function deletePpage(id) {
   return request({
-    url: `/setting/${id}`,
+    url: `/ppage/${id}`,
     method: 'delete'
   })
 }
