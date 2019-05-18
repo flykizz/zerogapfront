@@ -1,28 +1,12 @@
 <template>
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
-      <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
-        <CommentDropdown v-model="postForm.comment_disabled" />
-        <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" />
-        <el-button
-          v-loading="loading"
-          style="margin-left: 10px;"
-          type="success"
-          @click="submitForm"
-        >Publush</el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">Draft</el-button>
-      </sticky>
-
       <div class="createPost-main-container">
         <el-row>
-          <Warning />
-
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
               <MDinput v-model="postForm.title" :maxlength="100" name="name" required>Title</MDinput>
             </el-form-item>
-
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
@@ -109,16 +93,10 @@
 import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
-import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
 import { fetchArticle } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
-import Warning from './Warning'
-import {
-  CommentDropdown,
-  PlatformDropdown,
-  SourceUrlDropdown
-} from './Dropdown'
+
 const defaultForm = {
   status: 'draft',
   title: '', // 文章题目
@@ -133,16 +111,11 @@ const defaultForm = {
   importance: 0
 }
 export default {
-  name: 'ArticleDetail',
+  name: 'Detail',
   components: {
     Tinymce,
     MDinput,
-    Upload,
-    Sticky,
-    Warning,
-    CommentDropdown,
-    PlatformDropdown,
-    SourceUrlDropdown
+    Upload
   },
   props: {
     isEdit: {
@@ -279,6 +252,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

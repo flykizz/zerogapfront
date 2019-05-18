@@ -44,6 +44,19 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
+      }
+    ]
+  },
+  {
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
@@ -106,14 +119,257 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/icon',
+    path: '/organization',
     component: Layout,
+    redirect: '/organization/list',
+    name: 'Organization',
+    meta: {
+      title: 'organization',
+      icon: 'international'
+    },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true }
+        path: 'create',
+        component: () => import('@/views/organization/create'),
+        name: 'CreateOrganization',
+        meta: { title: 'createOrganization', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/organization/edit'),
+        name: 'EditOrganization',
+        meta: { title: 'editOrganization', noCache: true, activeMenu: '/organization/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/organization/list'),
+        name: 'OrganizationList',
+        meta: { title: 'organizationList', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/project',
+    component: Layout,
+    redirect: '/project/list',
+    name: 'project',
+    meta: {
+      title: 'project',
+      icon: 'news'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/project/create'),
+        name: 'CreateProject',
+        meta: { title: 'createProject', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/project/edit'),
+        name: 'EditProject',
+        meta: { title: 'editProject', noCache: true, activeMenu: '/project/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/project/list'),
+        name: 'ProjectList',
+        meta: { title: 'projectList', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/interface',
+    component: Layout,
+    redirect: '/interface/list',
+    name: 'Interface',
+    meta: {
+      title: 'interface',
+      icon: 'news'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/interface/create'),
+        name: 'CreateInterface',
+        meta: { title: 'createInterface', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/interface/edit'),
+        name: 'EditInterface',
+        meta: { title: 'editInterface', noCache: true, activeMenu: '/interface/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/interface/list'),
+        name: 'InterfaceList',
+        meta: { title: 'interfaceList', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/ppage',
+    component: Layout,
+    redirect: '/ppage/list',
+    name: 'Ppage',
+    meta: {
+      title: 'ppage',
+      icon: 'document'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/ppage/create'),
+        name: 'CreatePpage',
+        meta: { title: 'createPpage', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/ppage/edit'),
+        name: 'EditPpage',
+        meta: { title: 'editPpage', noCache: true, activeMenu: '/ppage/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/ppage/list'),
+        name: 'PpageList',
+        meta: { title: 'ppageList', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/stream',
+    component: Layout,
+    redirect: '/stream/list',
+    name: 'Stream',
+    meta: {
+      title: 'stream',
+      icon: 'eye-open'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/stream/create'),
+        name: 'CreateStream',
+        meta: { title: 'createStream', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/stream/edit'),
+        name: 'EditStream',
+        meta: { title: 'editStream', noCache: true, activeMenu: '/stream/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/stream/list'),
+        name: 'StreamList',
+        meta: { title: 'streamList', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/setting',
+    component: Layout,
+    redirect: '/setting/list',
+    name: 'Setting',
+    meta: {
+      title: 'setting',
+      icon: 'setting'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/setting/create'),
+        name: 'CreateSetting',
+        meta: { title: 'createSetting', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/setting/edit'),
+        name: 'EditSetting',
+        meta: { title: 'editSetting', noCache: true, activeMenu: '/setting/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/setting/list'),
+        name: 'SettingList',
+        meta: { title: 'settingList', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/role',
+    component: Layout,
+    redirect: '/role/list',
+    name: 'Role',
+    meta: {
+      title: 'role',
+      icon: 'peoples'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/role/create'),
+        name: 'CreateRole',
+        meta: { title: 'createRole', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/role/edit'),
+        name: 'EditRole',
+        meta: { title: 'editRole', noCache: true, activeMenu: '/role/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/role/list'),
+        name: 'RoleList',
+        meta: { title: 'roleList', icon: 'list' }
+      }
+    ]
+  },
+
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/list',
+    name: 'User',
+    meta: {
+      title: 'user',
+      icon: 'people'
+    },
+    children: [
+      {
+        path: 'create',
+        component: () => import('@/views/user/create'),
+        name: 'CreateUser',
+        meta: { title: 'createInterfac', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/user/edit'),
+        name: 'EditUser',
+        meta: { title: 'editUser', noCache: true, activeMenu: '/user/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/user/list'),
+        name: 'UserList',
+        meta: { title: 'userList', icon: 'list' }
       }
     ]
   },
