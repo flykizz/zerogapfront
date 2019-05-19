@@ -7,6 +7,13 @@ export function getUsers() {
   })
 }
 
+export function getUser(id) {
+  return request({
+    url: `/user/${id}`,
+    method: 'get'
+  })
+}
+
 export function addUser(data) {
   return request({
     url: '/user',

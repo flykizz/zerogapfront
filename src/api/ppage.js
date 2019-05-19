@@ -7,6 +7,13 @@ export function getPpages() {
   })
 }
 
+export function getPpage(id) {
+  return request({
+    url: `/ppage/${id}`,
+    method: 'get'
+  })
+}
+
 export function addPpage(data) {
   return request({
     url: '/ppage',

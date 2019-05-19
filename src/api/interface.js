@@ -7,6 +7,13 @@ export function getInterfaces() {
   })
 }
 
+export function getInterface(id) {
+  return request({
+    url: `/interface/${id}`,
+    method: 'get'
+  })
+}
+
 export function addInterface(data) {
   return request({
     url: '/interface',

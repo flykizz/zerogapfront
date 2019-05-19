@@ -7,6 +7,13 @@ export function getStreams() {
   })
 }
 
+export function getStream(id) {
+  return request({
+    url: `/stream/${id}`,
+    method: 'get'
+  })
+}
+
 export function addStream(data) {
   return request({
     url: '/stream',

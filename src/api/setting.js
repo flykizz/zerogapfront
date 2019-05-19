@@ -7,6 +7,12 @@ export function getSettings() {
   })
 }
 
+export function getSetting(id) {
+  return request({
+    url: `/setting/${id}`,
+    method: 'get'
+  })
+}
 export function addSetting(data) {
   return request({
     url: '/setting',

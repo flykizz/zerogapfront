@@ -7,9 +7,9 @@ export function getRoutes() {
   })
 }
 
-export function getRoles() {
+export function getRoles(id) {
   return request({
-    url: '/roles',
+    url: `/role/${id}`,
     method: 'get'
   })
 }

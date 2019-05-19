@@ -7,6 +7,13 @@ export function getOrganizations() {
   })
 }
 
+export function getOrganization(id) {
+  return request({
+    url: `/organization/${id}`,
+    method: 'get'
+  })
+}
+
 export function addOrganization(data) {
   return request({
     url: '/organization',

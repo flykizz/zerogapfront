@@ -7,6 +7,13 @@ export function getRepositories() {
   })
 }
 
+export function getRepositorie(id) {
+  return request({
+    url: `/repositorie/${id}`,
+    method: 'get'
+  })
+}
+
 export function addRepositorie(data) {
   return request({
     url: '/repositorie',
